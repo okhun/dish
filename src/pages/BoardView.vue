@@ -108,7 +108,7 @@
       </div>
     </div>
 
-    <div class="flex flex-col gap-4 overflow-y-auto">
+    <div class="flex flex-col gap-4 overflow-y-auto h-full">
       <template v-if="orders.length === 0">
         <div class="flex items-center justify-center h-32">
           <p class="text-gray-200 text-base font-normal">
@@ -117,13 +117,19 @@
         </div>
       </template>
       <template v-else>
-        <OrderItem
-          v-for="order in orders"
-          :key="order.id"
-          :order="order"
-          @delete="handleDishOrderDelete"
-          @update:note="(note:string) => updateOrderNote(order, note)"
-        />
+        <TransitionGroup
+          name="order-list"
+          tag="div"
+          class="flex flex-col gap-4"
+        >
+          <OrderItem
+            v-for="order in orders"
+            :key="order.id"
+            :order="order"
+            @delete="handleDishOrderDelete"
+            @update:note="(note:string) => updateOrderNote(order, note)"
+          />
+        </TransitionGroup>
       </template>
     </div>
     <div class="py-4 border-t border-dark-line">
@@ -486,3 +492,24 @@ const dishList = reactive<Dish[]>([
   },
 ]);
 </script>
+
+<style scoped>
+.order-list-enter-active,
+.order-list-leave-active {
+  transition: all 0.5s ease;
+}
+
+.order-list-enter-from {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+.order-list-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+.order-list-move {
+  transition: transform 0.5s ease;
+}
+</style>
