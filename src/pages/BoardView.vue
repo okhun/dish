@@ -21,8 +21,13 @@
       class="mt-4"
       @update:model-value="handleTabModel"
     />
-    <div class="mb-20">
+    <div class="mb-20 flex items-center justify-between">
       <p class="text-xl font-semibold text-white">Choose Dishes</p>
+      <BaseSelect
+        :options="orderTypeList"
+        v-model="orderTypeValue"
+        class="w-36"
+      />
     </div>
     <div
       v-if="computedDishList.length === 0"
@@ -74,6 +79,22 @@
   <div class="w-[540px] bg-secondary h-full p-4 flex flex-col justify-between">
     <div>
       <p class="text-white text-xl font-semibold">Orders #34562</p>
+      <div class="flex gap-4 my-6">
+        <button
+          v-for="orderType in orderTypeList"
+          :key="orderType.key"
+          class="text-sm font-semibold border border-dark-line p-2 rounded-lg cursor-pointer"
+          :class="[
+            orderType.key === orderTypeValue
+              ? 'text-white bg-primary'
+              : 'text-primary',
+          ]"
+          @click="orderTypeValue = orderType.key"
+          :disabled="orderType.key === orderTypeValue"
+        >
+          {{ orderType.label }}
+        </button>
+      </div>
       <div
         class="grid grid-cols-5 mt-4 text-white text-base font-semibold gap-4 border-b border-dark-line"
       >
@@ -132,6 +153,7 @@ import BaseButton from "../components/BaseButton.vue";
 import { formatPrice } from "../utils";
 import DishCard from "../components/DishCard.vue";
 import OrderItem from "../components/OrderItem.vue";
+import BaseSelect from "../components/BaseSelect.vue";
 
 interface Dish {
   id: number;
@@ -146,6 +168,7 @@ const route = useRoute();
 const router = useRouter();
 const currentTab = ref<string | number>("hot-dishes");
 const debouncedSearchTerm = ref("");
+const orderTypeValue = ref("dine-in");
 const formattedCurrentDate = computed(() => {
   const now = new Date();
   const weekday = new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(
@@ -255,6 +278,11 @@ onMounted(() => {
     debouncedSearchTerm.value = searchTerm;
   }
 });
+const orderTypeList = [
+  { key: "dine-in", label: "Dine in" },
+  { key: "take-away", label: "To go" },
+  { key: "delivery", label: "Delivery" },
+];
 const tabs = [
   { key: "hot-dishes", label: "Hot Dishes" },
   { key: "cold-dishes", label: "Cold Dishes" },
@@ -272,7 +300,7 @@ const dishList = reactive<Dish[]>([
     price: 2.29,
     count: 20,
     image:
-      "https://images.unsplash.com/photo-1569058242567-93de6f36f8eb?w=500&h=350&fit=crop",
+      "https://images.unsplash.com/photo-1552611052-33e04de081de?w=500&h=350&auto=format&fit=crop",
     type: "hot-dishes",
   },
   {
@@ -281,7 +309,7 @@ const dishList = reactive<Dish[]>([
     price: 2.69,
     count: 11,
     image:
-      "https://images.unsplash.com/photo-1556761223-4c4282c73f77?w=500&h=350&fit=crop",
+      "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=500&h=350&auto=format&fit=crop",
     type: "hot-dishes",
   },
   {
@@ -290,7 +318,7 @@ const dishList = reactive<Dish[]>([
     price: 2.99,
     count: 16,
     image:
-      "https://images.unsplash.com/photo-1626509653291-8c8c2a421478?w=500&h=350&fit=crop",
+      "https://images.unsplash.com/photo-1607330289024-1535c6b4e1c1?w=500&h=350&auto=format&fit=crop",
     type: "hot-dishes",
   },
   {
@@ -299,7 +327,7 @@ const dishList = reactive<Dish[]>([
     price: 3.49,
     count: 8,
     image:
-      "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=500&h=350&fit=crop",
+      "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=500&h=350&auto=format&fit=crop",
     type: "hot-dishes",
   },
 
@@ -310,7 +338,7 @@ const dishList = reactive<Dish[]>([
     price: 2.19,
     count: 14,
     image:
-      "https://images.unsplash.com/photo-1553531889-e6cf4d692b1b?w=500&h=350&fit=crop",
+      "https://images.unsplash.com/photo-1562967914-608f82629710?w=500&h=350&auto=format&fit=crop",
     type: "cold-dishes",
   },
   {
@@ -319,7 +347,7 @@ const dishList = reactive<Dish[]>([
     price: 1.89,
     count: 9,
     image:
-      "https://images.unsplash.com/photo-1603105037243-7b6289fd2f08?w=500&h=350&fit=crop",
+      "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=500&h=350&auto=format&fit=crop",
     type: "cold-dishes",
   },
   {
@@ -328,7 +356,7 @@ const dishList = reactive<Dish[]>([
     price: 2.49,
     count: 12,
     image:
-      "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500&h=350&fit=crop",
+      "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=500&h=350&auto=format&fit=crop",
     type: "cold-dishes",
   },
 
@@ -339,7 +367,7 @@ const dishList = reactive<Dish[]>([
     price: 2.29,
     count: 16,
     image:
-      "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=500&h=350&fit=crop",
+      "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=500&h=350&auto=format&fit=crop",
     type: "soup",
   },
   {
@@ -348,7 +376,7 @@ const dishList = reactive<Dish[]>([
     price: 2.89,
     count: 7,
     image:
-      "https://images.unsplash.com/photo-1583608564575-b97694d8770f?w=500&h=350&fit=crop",
+      "https://images.unsplash.com/photo-1547592166-23ac45744acd?w=500&h=350&auto=format&fit=crop",
     type: "soup",
   },
   {
@@ -357,7 +385,7 @@ const dishList = reactive<Dish[]>([
     price: 2.59,
     count: 11,
     image:
-      "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=500&h=350&fit=crop",
+      "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=500&h=350&auto=format&fit=crop",
     type: "soup",
   },
 
@@ -368,7 +396,7 @@ const dishList = reactive<Dish[]>([
     price: 6.99,
     count: 5,
     image:
-      "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=500&h=350&fit=crop",
+      "https://images.unsplash.com/photo-1600891964092-4316c288032e?w=500&h=350&auto=format&fit=crop",
     type: "grill",
   },
   {
@@ -377,7 +405,7 @@ const dishList = reactive<Dish[]>([
     price: 5.89,
     count: 8,
     image:
-      "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=500&h=350&fit=crop",
+      "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=500&h=350&auto=format&fit=crop",
     type: "grill",
   },
   {
@@ -386,7 +414,7 @@ const dishList = reactive<Dish[]>([
     price: 4.99,
     count: 9,
     image:
-      "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=500&h=350&fit=crop",
+      "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=500&h=350&auto=format&fit=crop",
     type: "grill",
   },
 
@@ -397,7 +425,7 @@ const dishList = reactive<Dish[]>([
     price: 3.29,
     count: 15,
     image:
-      "https://images.unsplash.com/photo-1668236543090-82eba5ee5976?w=500&h=350&fit=crop",
+      "https://images.unsplash.com/photo-1533162507191-d90c625b2640?w=500&h=350&auto=format&fit=crop",
     type: "appetizer",
   },
   {
@@ -406,7 +434,7 @@ const dishList = reactive<Dish[]>([
     price: 2.79,
     count: 12,
     image:
-      "https://images.unsplash.com/photo-1576506295286-5cda18df9ef1?w=500&h=350&fit=crop",
+      "https://images.unsplash.com/photo-1575932444877-5106bee2a599?w=500&h=350&auto=format&fit=crop",
     type: "appetizer",
   },
   {
@@ -415,7 +443,7 @@ const dishList = reactive<Dish[]>([
     price: 2.39,
     count: 14,
     image:
-      "https://images.unsplash.com/photo-1506280754576-f6fa8a873550?w=500&h=350&fit=crop",
+      "https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=500&h=350&auto=format&fit=crop",
     type: "appetizer",
   },
 
@@ -426,7 +454,7 @@ const dishList = reactive<Dish[]>([
     price: 3.49,
     count: 10,
     image:
-      "https://images.unsplash.com/photo-1533134242443-d4fd215305ad?w=500&h=350&fit=crop",
+      "https://images.unsplash.com/photo-1570476922354-81227cdbb76c?w=500&h=350&auto=format&fit=crop",
     type: "dessert",
   },
   {
@@ -435,7 +463,7 @@ const dishList = reactive<Dish[]>([
     price: 3.29,
     count: 8,
     image:
-      "https://images.unsplash.com/photo-1602351447937-745cb720612f?w=500&h=350&fit=crop",
+      "https://images.unsplash.com/photo-1602351447937-745cb720612f?w=500&h=350&auto=format&fit=crop",
     type: "dessert",
   },
   {
@@ -444,7 +472,7 @@ const dishList = reactive<Dish[]>([
     price: 2.99,
     count: 6,
     image:
-      "https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=500&h=350&fit=crop",
+      "https://images.unsplash.com/photo-1551024506-0bccd828d307?w=500&h=350&auto=format&fit=crop",
     type: "dessert",
   },
   {
@@ -453,7 +481,7 @@ const dishList = reactive<Dish[]>([
     price: 3.19,
     count: 9,
     image:
-      "https://images.unsplash.com/photo-1488477304112-4944851de03d?w=500&h=350&fit=crop",
+      "https://images.unsplash.com/photo-1488477304112-4944851de03d?w=500&h=350&auto=format&fit=crop",
     type: "dessert",
   },
 ]);

@@ -29,7 +29,7 @@
         $ {{ formatPrice(order.price * order.count) }}
       </p>
       <button
-        class="size-12 rounded-lg border border-primary flex items-center justify-center cursor-pointer hover:bg-primary hover:bg-opacity-10 transition-colors"
+        class="size-12 rounded-lg border border-primary text-primary flex items-center justify-center cursor-pointer hover:bg-primary hover:text-white hover:bg-opacity-10 transition-colors"
         @click="$emit('delete', order)"
       >
         <DeleteSvg />
